@@ -7,15 +7,14 @@ export const Mongo = {
       const client = new MongoClient(mongoConnectionString);
 
       await client.connect();
-
       const db = client.db(mongoDbName);
 
       this.client = client;
       this.db = db;
 
-      return 'Connected to Mongo!'
+      return "Connected to mongo!";
     } catch (error) {
-      return { text: "Erro during Mongo connection", error };
+      return { text: "Error during mongo connection", error };
     }
   },
 };
