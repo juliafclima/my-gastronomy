@@ -2,12 +2,13 @@ import express from "express";
 import passport from "passport";
 import LocalStrategy from "passport-local";
 import crypto from "crypto";
-import { Mongo } from "../database/mongo.js";
 import jwt from "jsonwebtoken";
+import { Mongo } from "../database/mongo.js";
 import { ObjectId } from "mongodb";
 
-// AUTENTICAÇÃO E REGISTRAÇÃO
 const collectionName = "users";
+
+const authRouter = express.Router();
 
 passport.use(
   new LocalStrategy(
@@ -17,7 +18,9 @@ passport.use(
         .collection(collectionName)
         .findOne({ email: email });
 
-      if (!user) return callback(null, false);
+      if (!user) {
+        return callback(null, false);
+      }
 
       const saltBuffer = user.salt.buffer;
 
@@ -27,13 +30,16 @@ passport.use(
         310000,
         16,
         "sha256",
-        (err, hashedPassword) => {
-          if (err) return callback(null, false);
+        (error, hashedPassword) => {
+          if (error) {
+            return callback(error);
+          }
 
-          const userPasswordBuffer = Buffer.from(user.password.buffer);
+          const userPassowrdBuffer = Buffer.from(user.password.buffer);
 
-          if (!crypto.timingSafeEqual(userPasswordBuffer, hashedPassword))
+          if (!crypto.timingSafeEqual(userPassowrdBuffer, hashedPassword)) {
             return callback(null, false);
+          }
 
           const { password, salt, ...rest } = user;
 
@@ -44,44 +50,54 @@ passport.use(
   )
 );
 
-const authRouter = express.Router();
-
-// REGISTRO DO USUARIO
 authRouter.post("/signup", async (req, res) => {
   const checkUser = await Mongo.db
     .collection(collectionName)
     .findOne({ email: req.body.email });
 
-  if (checkUser)
+  if (checkUser) {
     return res.status(500).send({
       success: false,
-      statusCode: 409,
-      body: { text: "User already exists!" },
+      statusCode: 500,
+      body: {
+        text: "User already exists",
+      },
     });
+  }
 
   const salt = crypto.randomBytes(16);
+
   crypto.pbkdf2(
     req.body.password,
     salt,
     310000,
     16,
     "sha256",
-    async (err, hashedPassword) => {
-      if (err)
-        return res.status(500).send({
+    async (error, hashedPassword) => {
+      if (error) {
+        res.status(500).send({
           success: false,
           statusCode: 500,
-          body: { text: "Error on crypto password!", err },
+          body: {
+            text: "User already exists",
+          },
         });
+      }
 
-      const result = await Mongo.db
-        .collection(collectionName)
-        .insertOne({ email: req.body.email, password: hashedPassword, salt });
+      const result = await Mongo.db.collection(collectionName).insertOne({
+        fullname: req.body.fullname,
+        email: req.body.email,
+        password: hashedPassword,
+        salt,
+      });
 
       if (result.insertedId) {
         const user = await Mongo.db
           .collection(collectionName)
-          .findOne({ _id: new ObjectId(result.insertedId) });
+          .findOne(
+            { _id: new ObjectId(result.insertedId) },
+            { projection: { password: 0, salt: 0 } }
+          );
 
         const token = jwt.sign(user, "secret");
 
@@ -89,10 +105,9 @@ authRouter.post("/signup", async (req, res) => {
           success: true,
           statusCode: 200,
           body: {
-            text: "User registered correctly",
-            token,
+            text: "User registered",
             user,
-            logged: true,
+            token,
           },
         });
       }
@@ -100,10 +115,9 @@ authRouter.post("/signup", async (req, res) => {
   );
 });
 
-// LOGIN DO USUARIO
-authRouter.post("/login", async (req, res) => {
+authRouter.post("/login", (req, res) => {
   passport.authenticate("local", (error, user) => {
-    if (error)
+    if (error) {
       return res.status(500).send({
         success: false,
         statusCode: 500,
@@ -112,15 +126,17 @@ authRouter.post("/login", async (req, res) => {
           error,
         },
       });
+    }
 
-    if (!user)
+    if (!user) {
       return res.status(400).send({
         success: false,
         statusCode: 400,
         body: {
-          text: "User not found"
+          text: "Credentials are not correct",
         },
       });
+    }
 
     const token = jwt.sign(user, "secret");
     return res.status(200).send({
