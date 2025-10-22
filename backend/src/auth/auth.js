@@ -3,8 +3,9 @@ import passport from "passport";
 import LocalStrategy from "passport-local";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
-import { Mongo } from "../database/mongo.js";
 import { ObjectId } from "mongodb";
+
+import { Mongo } from "../database/mongo.js";
 
 const collectionName = "users";
 

@@ -25,7 +25,7 @@ export default class PlatesDataAccess {
       .collection(collectionName)
       .insertOne(plateData);
 
-    return result.insertedId;
+    return result;
   }
 
   async deletePlate(plateId) {
