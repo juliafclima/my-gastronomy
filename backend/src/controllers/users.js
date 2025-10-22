@@ -9,7 +9,6 @@ export default class UsersControllers {
   async getUsers() {
     try {
       const users = await this.dataAccess.getUsers();
-
       return ok(users);
     } catch (error) {
       return serverError(error);
@@ -21,7 +20,6 @@ export default class UsersControllers {
       const result = await this.dataAccess.deleteUser(userId);
       return ok(result);
     } catch (error) {
-      console.log(error);
       return serverError(error);
     }
   }
@@ -31,7 +29,6 @@ export default class UsersControllers {
       const result = await this.dataAccess.updateUser(userId, userData);
       return ok(result);
     } catch (error) {
-      console.log(error);
       return serverError(error);
     }
   }
