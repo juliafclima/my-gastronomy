@@ -41,13 +41,4 @@ export default class OrdersControllers {
       return serverError(error);
     }
   }
-
-  async updateOrder(orderId, orderData) {
-    try {
-      const result = await this.dataAccess.updateOrder(orderId, orderData);
-      return ok(result);
-    } catch (error) {
-      return serverError(error);
-    }
-  }
 }

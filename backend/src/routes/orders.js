@@ -34,13 +34,4 @@ ordersRouter.delete("/:id", async (req, res) => {
   res.status(statusCode).send({ body, success, statusCode });
 });
 
-ordersRouter.put("/:id", async (req, res) => {
-  const { body, success, statusCode } = await ordersControllers.updateOrder(
-    req.params.id,
-    req.body
-  );
-
-  res.status(statusCode).send({ body, success, statusCode });
-});
-
 export default ordersRouter;

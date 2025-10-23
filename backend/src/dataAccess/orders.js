@@ -151,12 +151,4 @@ export default class OrdersDataAccess {
 
     return result;
   }
-
-  async updateOrder(orderId, orderData) {
-    const result = await Mongo.db
-      .collection(collectionName)
-      .findOneAndUpdate({ _id: new ObjectId(orderId) }, { $set: orderData });
-
-    return result;
-  }
 }

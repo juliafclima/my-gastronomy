@@ -1,9 +1,9 @@
+import Navbar from "./components/navbar/index.jsx";
+
 function App() {
   return (
     <>
-      <div>
-        <h1>Hello World!</h1>
-      </div>
+      <Navbar />
     </>
   );
 }
