@@ -26,19 +26,35 @@
 }
 
 .link {
-  color: #faf0ca;
+  color: #fffffe;
   text-decoration: none;
   font-weight: 500;
   cursor: pointer;
+  font-size: 1.1em;
   transition: opacity 0.2s ease;
 }
 
 .link:hover {
-  color: #004643;
+  color: #E8B358;
+}
+
+.drawer {
+  background-color: #004643;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 2.5em;
+  gap: 0.5em;
 }
 
 @media (max-width: 758px) {
-  .linkText {
+  .desktopOnly {
+    display: none;
+  }
+}
+
+@media (min-width: 758px) {
+  .hideOnWeb {
     display: none;
   }
 }
