@@ -1,0 +1,55 @@
+.pageWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 70vh;
+}
+
+.container {
+  background-color: var(--color-primary);
+  color: var(--color-text-light);
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 400px;
+  margin: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  text-align: right;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
+.toggleButton {
+  background-color: transparent;
+  color: var(--color-secondary);
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: 1.5rem;
+  text-decoration: underline;
+  text-align: right;
+}
+
+.toggleButton:hover {
+  color: var(--color-secondary-hover);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.submitButton {
+  background-color: var(--color-secondary) !important;
+  color: var(--color-primary) !important;
+  margin-top: 1rem !important;
+  font-weight: bold;
+}
+
+.submitButton:hover {
+  background-color: var(--color-secondary-hover) !important;
+}
